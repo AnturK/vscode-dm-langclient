@@ -60,6 +60,15 @@ export async function activate(context: ExtensionContext) {
 		return docs_provider.open_reference(dm_path);
 	}));
 
+	context.subscriptions.push(commands.registerCommand('dreammaker.findReferencesTree', async (element: extras.ObjectTreeEntry) => {
+		if(!element || !element.location)
+		{
+			return;
+		}
+		//I guess i could make fake temp file and pass that as source but that's ugly as sin.
+		return await commands.executeCommand("references-view.find",element.location.uri, element.location.range.start.line);
+	}));
+
 	// register the docs provider
 	docs_provider = new reference.Provider();
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
